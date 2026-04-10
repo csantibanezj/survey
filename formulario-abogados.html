@@ -641,19 +641,17 @@
       consentimiento: 'Sí'
     };
 
-    try {
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
+try {
+  const params = new URLSearchParams(data);
+  await fetch(https://script.google.com/macros/s/AKfycbzrX8tGFBClza27MOdH5942wQFc-IjIom_3s8MOOOH42_wfl3eQB9_B7uI7AmFHpwk_/exec, {
+    method: 'POST',
+    mode: 'no-cors',
+    body: params
+  });
 
-      // Con mode: 'no-cors' no podemos leer la respuesta,
-      // pero si no lanzó excepción, asumimos OK
-      form.style.display = 'none';
-      document.getElementById('feedback-ok').classList.add('show');
-    } catch (err) {
+  form.style.display = 'none';
+  document.getElementById('feedback-ok').classList.add('show');
+} catch (err) {
       console.error(err);
       document.getElementById('feedback-error').classList.add('show');
       btn.disabled = false;
