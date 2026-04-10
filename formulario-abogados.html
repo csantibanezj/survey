@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diagnóstico Digital — Abogados</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1a1a2e;
+      --ink-soft: #4a4a5a;
+      --ink-muted: #8b8b9e;
+      --surface: #faf9f7;
+      --card: #ffffff;
+      --accent: #2d4a7a;
+      --accent-light: #e8eef6;
+      --accent-hover: #1e3a66;
+      --border: #e2e0dc;
+      --border-focus: #2d4a7a;
+      --error: #c0392b;
+      --success: #27ae60;
+      --radius: 8px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    /* --- Header --- */
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .header-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(28px, 5vw, 38px);
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .header p {
+      font-size: 16px;
+      color: var(--ink-soft);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .header .time-note {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin-top: 8px;
+    }
+
+    /* --- Sections --- */
+    .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px 28px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin-bottom: 24px;
+    }
+
+    /* --- Fields --- */
+    .field { margin-bottom: 20px; }
+    .field:last-child { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    label .optional {
+      font-weight: 400;
+      color: var(--ink-muted);
+      font-size: 12px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
+      width: 100%;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: var(--ink);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(45, 74, 122, 0.1);
+    }
+
+    textarea { resize: vertical; min-height: 90px; }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238b8b9e' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    /* --- Checkbox grid --- */
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    @media (max-width: 480px) {
+      .checkbox-grid { grid-template-columns: 1fr; }
+      .section { padding: 24px 20px; }
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      user-select: none;
+    }
+
+    .checkbox-item:hover {
+      background: var(--accent-light);
+      border-color: var(--accent);
+    }
+
+    .checkbox-item.checked {
+      background: var(--accent-light);
+      border-color: var(--accent);
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      margin-top: 1px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s;
+    }
+
+    .checkbox-item input[type="checkbox"]:checked {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .checkbox-item input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 1px;
+      width: 6px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .checkbox-label {
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.4;
+    }
+
+    /* --- Consent --- */
+    .consent-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .consent-box input[type="checkbox"] {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      margin-top: 2px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s;
+    }
+
+    .consent-box input[type="checkbox"]:checked {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .consent-box input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 5px;
+      top: 1px;
+      width: 6px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .consent-text {
+      font-size: 13px;
+      color: var(--ink-soft);
+      line-height: 1.5;
+    }
+
+    .consent-text strong {
+      color: var(--ink);
+    }
+
+    .consent-detail {
+      font-size: 12px;
+      color: var(--ink-muted);
+      margin-top: 12px;
+      padding: 12px 16px;
+      background: var(--surface);
+      border-left: 3px solid var(--border);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      line-height: 1.6;
+    }
+
+    /* --- Submit --- */
+    .submit-section {
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    .submit-btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius);
+      padding: 14px 48px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.3px;
+    }
+
+    .submit-btn:hover { background: var(--accent-hover); }
+    .submit-btn:active { transform: scale(0.98); }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .privacy-note {
+      font-size: 12px;
+      color: var(--ink-muted);
+      margin-top: 12px;
+    }
+
+    /* --- States --- */
+    .feedback {
+      display: none;
+      text-align: center;
+      padding: 48px 28px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .feedback.show { display: block; }
+
+    .feedback-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .feedback h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 24px;
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+
+    .feedback p {
+      font-size: 15px;
+      color: var(--ink-soft);
+    }
+
+    .error-msg {
+      color: var(--error);
+      font-size: 13px;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="header-badge">Confidencial</div>
+    <h1>Diagnóstico Digital para Abogados</h1>
+    <p>Queremos entender los desafíos reales de su práctica profesional para desarrollar soluciones tecnológicas que aporten valor concreto.</p>
+    <p class="time-note">⏱ Menos de 2 minutos</p>
+  </div>
+
+  <form id="diagnostico-form">
+
+    <!-- ======================== -->
+    <!-- SECCIÓN 1: PERFIL        -->
+    <!-- ======================== -->
+    <div class="section">
+      <h2 class="section-title">Sobre su práctica</h2>
+      <p class="section-subtitle">Para contextualizar sus respuestas</p>
+
+      <div class="field">
+        <label for="modalidad">Modalidad de ejercicio</label>
+        <select id="modalidad" name="Modalidad" required>
+          <option value="" disabled selected>Seleccione</option>
+          <option value="Independiente">Independiente / Solo</option>
+          <option value="Estudio pequeño (2-5)">Estudio pequeño (2 a 5 abogados)</option>
+          <option value="Estudio mediano (6-20)">Estudio mediano (6 a 20 abogados)</option>
+          <option value="Estudio grande (20+)">Estudio grande (más de 20)</option>
+          <option value="Departamento legal interno">Departamento legal de empresa</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Áreas de práctica principales</label>
+        <div class="checkbox-grid">
+          <label class="checkbox-item">
+            <input type="checkbox" name="Áreas" value="Civil">
+            <span class="checkbox-label">Civil</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="Áreas" value="Penal">
+            <span class="checkbox-label">Penal</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="Áreas" value="Laboral">
+            <span class="checkbox-label">Laboral</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="Áreas" value="Familia">
+            <span class="checkbox-label">Familia</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="Áreas" value="Corporativo">
+            <span class="checkbox-label">Corporativo / Comercial</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="Áreas" value="Tributario">
+            <span class="checkbox-label">Tributario</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="Áreas" value="Inmobiliario">
+            <span class="checkbox-label">Inmobiliario</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="Áreas" value="Otro">
+            <span class="checkbox-label">Otro</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== -->
+    <!-- SECCIÓN 2: DOLORES       -->
+    <!-- ======================== -->
+    <div class="section">
+      <h2 class="section-title">Principales desafíos</h2>
+      <p class="section-subtitle">Seleccione todos los que apliquen a su realidad</p>
+
+      <div class="field">
+        <label>¿Qué problemas enfrenta hoy en su ejercicio profesional?</label>
+        <div class="checkbox-grid">
+          <label class="checkbox-item">
+            <input type="checkbox" name="Dolores" value="Seguimiento de causas y plazos">
+            <span class="checkbox-label">Seguimiento de causas y plazos</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="Dolores" value="Gestión de documentos">
+            <span class="checkbox-label">Gestión de documentos</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="Dolores" value="Facturación y cobranza">
+            <span class="checkbox-label">Facturación y cobranza</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="Dolores" value="Comunicación con clientes">
+            <span class="checkbox-label">Comunicación con clientes</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="Dolores" value="Control de carga de trabajo">
+            <span class="checkbox-label">Control de carga de trabajo</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="Dolores" value="Captación de nuevos clientes">
+            <span class="checkbox-label">Captación de nuevos clientes</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="Dolores" value="Cumplimiento normativo">
+            <span class="checkbox-label">Cumplimiento normativo</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="Dolores" value="Coordinación con equipo o colegas">
+            <span class="checkbox-label">Coordinación con equipo o colegas</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="herramientas">¿Qué herramientas usa hoy para gestionar su trabajo?</label>
+        <select id="herramientas" name="Herramienta actual">
+          <option value="" disabled selected>Seleccione la principal</option>
+          <option value="Excel / Planillas">Excel / Planillas</option>
+          <option value="Software legal especializado">Software legal especializado</option>
+          <option value="Email + carpetas">Email + carpetas</option>
+          <option value="Papel / cuadernos">Papel / cuadernos</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="dolor-principal">Si pudiera resolver <strong>un solo problema</strong> con tecnología, ¿cuál sería?</label>
+        <textarea id="dolor-principal" name="Dolor principal" placeholder="Cuéntenos en sus propias palabras..." required></textarea>
+      </div>
+    </div>
+
+    <!-- ======================== -->
+    <!-- SECCIÓN 3: CONTACTO      -->
+    <!-- ======================== -->
+    <div class="section">
+      <h2 class="section-title">Contacto</h2>
+      <p class="section-subtitle">Para compartirle los resultados del diagnóstico</p>
+
+      <div class="field">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="Nombre" required placeholder="Nombre y apellido">
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="Email" required placeholder="correo@ejemplo.cl">
+      </div>
+
+      <div class="field">
+        <label for="telefono">Teléfono <span class="optional">(opcional)</span></label>
+        <input type="text" id="telefono" name="Teléfono" placeholder="+56 9 ...">
+      </div>
+
+      <div class="field">
+        <label for="disponibilidad">¿Estaría disponible para una conversación breve de 15 minutos?</label>
+        <select id="disponibilidad" name="Disponible para conversar">
+          <option value="" disabled selected>Seleccione</option>
+          <option value="Sí">Sí, con gusto</option>
+          <option value="Tal vez">Tal vez, depende del horario</option>
+          <option value="No">Prefiero no por ahora</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- ======================== -->
+    <!-- TRATAMIENTO DE DATOS     -->
+    <!-- ======================== -->
+    <div class="section">
+      <h2 class="section-title">Tratamiento de datos</h2>
+
+      <div class="consent-detail">
+        <strong>¿Qué haremos con sus datos?</strong><br>
+        Sus respuestas serán utilizadas exclusivamente para comprender las necesidades de profesionales del derecho y ofrecer soluciones tecnológicas relevantes.<br><br>
+        <strong>¿Qué NO haremos?</strong><br>
+        • No compartiremos su información con terceros bajo ninguna circunstancia.<br>
+        • No enviaremos comunicaciones no solicitadas más allá del resultado de este diagnóstico.<br>
+        • No usaremos sus datos con fines publicitarios ni los venderemos.<br><br>
+      </div>
+
+      <div class="field" style="margin-top: 16px;">
+        <label class="consent-box">
+          <input type="checkbox" id="consentimiento" name="Consentimiento" value="Acepta" required>
+          <span class="consent-text">
+            He leído y acepto las condiciones de tratamiento de datos descritas anteriormente.
+          </span>
+        </label>
+        <p class="error-msg" id="consent-error">Debe aceptar las condiciones para enviar el formulario.</p>
+      </div>
+    </div>
+
+    <!-- ======================== -->
+    <!-- SUBMIT                   -->
+    <!-- ======================== -->
+    <div class="submit-section">
+      <button type="submit" class="submit-btn" id="submit-btn">Enviar diagnóstico</button>
+      <p class="privacy-note">Sus respuestas son confidenciales.</p>
+    </div>
+
+  </form>
+
+  <!-- Success / Error states -->
+  <div class="feedback" id="feedback-ok">
+    <div class="feedback-icon">✓</div>
+    <h2>¡Gracias por su tiempo!</h2>
+    <p>Revisaremos sus respuestas y le contactaremos pronto con los resultados del diagnóstico.</p>
+  </div>
+
+  <div class="feedback" id="feedback-error">
+    <div class="feedback-icon">⚠</div>
+    <h2>Error al enviar</h2>
+  </div>
+
+  <div class="footer">
+    &copy; 2026 · Diagnóstico confidencial
+  </div>
+
+</div>
+
+<script>
+  // Toggle visual state on checkbox items
+  document.querySelectorAll('.checkbox-item input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.closest('.checkbox-item').classList.toggle('checked', cb.checked);
+    });
+  });
+
+  // =====================================================
+  // GOOGLE SHEETS BACKEND
+  // Reemplaza esta URL con tu Google Apps Script Web App URL
+  // (ver instrucciones más abajo)
+  // =====================================================
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw4CtPaZZuXOZSbEyd8aiqg7_NmJlH4bBZnC7kFIK7uL-UWcW7DfdJicWX0nk2U8abI/exec';
+
+  document.getElementById('diagnostico-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+    const btn = document.getElementById('submit-btn');
+    const consentimiento = document.getElementById('consentimiento');
+
+    // Validar consentimiento
+    if (!consentimiento.checked) {
+      document.getElementById('consent-error').style.display = 'block';
+      consentimiento.closest('.consent-box').style.borderColor = 'var(--error)';
+      return;
+    }
+    document.getElementById('consent-error').style.display = 'none';
+
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+
+    // Recopilar datos
+    const getChecked = (name) =>
+      [...form.querySelectorAll(`input[name="${name}"]:checked`)]
+        .map(c => c.value).join(', ');
+
+    const data = {
+      timestamp: new Date().toISOString(),
+      modalidad: form.Modalidad.value,
+      areas: getChecked('Áreas'),
+      dolores: getChecked('Dolores'),
+      herramienta: form['Herramienta actual'].value,
+      dolor_principal: form['Dolor principal'].value,
+      nombre: form.Nombre.value,
+      email: form.Email.value,
+      telefono: form['Teléfono'].value || '',
+      disponibilidad: form['Disponible para conversar'].value,
+      consentimiento: 'Sí'
+    };
+
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      // Con mode: 'no-cors' no podemos leer la respuesta,
+      // pero si no lanzó excepción, asumimos OK
+      form.style.display = 'none';
+      document.getElementById('feedback-ok').classList.add('show');
+    } catch (err) {
+      console.error(err);
+      document.getElementById('feedback-error').classList.add('show');
+      btn.disabled = false;
+      btn.textContent = 'Enviar diagnóstico';
+    }
+  });
+</script>
+
+</body>
+</html>
