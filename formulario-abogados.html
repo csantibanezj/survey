@@ -432,10 +432,19 @@
             <span class="checkbox-label">Inmobiliario</span>
           </label>
           <label class="checkbox-item">
-            <input type="checkbox" name="Áreas" value="Otro">
+            <input type="checkbox" name="Áreas" value="Migratorio">
+            <span class="checkbox-label">Migratorio</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="Áreas" value="Ambiental">
+            <span class="checkbox-label">Ambiental</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="Áreas" value="Otro" id="areas-otro-cb">
             <span class="checkbox-label">Otro</span>
           </label>
         </div>
+        <input type="text" id="areas-otro-text" name="Áreas otro" placeholder="Especifique el área..." style="display:none; margin-top:10px;">
       </div>
     </div>
 
@@ -520,8 +529,8 @@
       </div>
 
       <div class="field">
-        <label for="telefono">Teléfono <span class="optional">(opcional)</span></label>
-        <input type="text" id="telefono" name="Teléfono" placeholder="+56 9 ...">
+        <label for="telefono">Teléfono</label>
+        <input type="text" id="telefono" name="Teléfono" required placeholder="+56 9 ...">
       </div>
 
       <div class="field">
@@ -597,6 +606,13 @@
     });
   });
 
+  // Show/hide "Otro" textbox for Áreas
+  document.getElementById('areas-otro-cb').addEventListener('change', function () {
+    const txt = document.getElementById('areas-otro-text');
+    txt.style.display = this.checked ? 'block' : 'none';
+    if (!this.checked) txt.value = '';
+  });
+
   // =====================================================
   // GOOGLE SHEETS BACKEND
   // Reemplaza esta URL con tu Google Apps Script Web App URL
@@ -630,7 +646,11 @@
     const data = {
       timestamp: new Date().toISOString(),
       modalidad: form.Modalidad.value,
-      areas: getChecked('Áreas'),
+      areas: (() => {
+        const checked = getChecked('Áreas');
+        const otroTxt = form['Áreas otro'] && form['Áreas otro'].value.trim();
+        return checked && otroTxt ? checked.replace('Otro', `Otro: ${otroTxt}`) : checked;
+      })(),
       dolores: getChecked('Dolores'),
       herramienta: form['Herramienta actual'].value,
       dolor_principal: form['Dolor principal'].value,
